@@ -376,12 +376,17 @@ class Arm(RobotComponent):
         handles = [j.get_handle() for j in self.joints]
 
         try:
-            configs = self.solve_ik_via_sampling(
-                position, euler, quaternion, ignore_collisions, trials,
-                max_configs, distance_threshold, max_time_ms, relative_to)
+            # configs = self.solve_ik_via_sampling(
+            #     position, euler, quaternion, ignore_collisions, trials,
+            #     max_configs, distance_threshold, max_time_ms, relative_to)
+            configs = np.array(self.solve_ik_via_jacobian(
+                position, euler, quaternion, relative_to))
+
         except ConfigurationError as e:
             raise ConfigurationPathError('Could not create path.') from e
-
+        except IKError:
+            raise ConfigurationPathError('Could not solve IK.')
+        
         _, ret_floats, _, _ = utils.script_call(
             'getNonlinearPath@PyRep', PYREP_SCRIPT_TYPE,
             ints=[self._collision_collection, int(ignore_collisions),
@@ -391,6 +396,7 @@ class Arm(RobotComponent):
 
         if len(ret_floats) == 0:
             raise ConfigurationPathError('Could not create path.')
+        print(ret_floats)
         return ArmConfigurationPath(self, ret_floats)
 
     def get_path(self, position: Union[List[float], np.ndarray],

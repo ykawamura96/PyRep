@@ -177,6 +177,10 @@ class Shape(Object):
     def _get_requested_type(self) -> ObjectType:
         return ObjectType.SHAPE
 
+    def set_scale(self, xscale, ysacle, zscale) -> bool:
+        return sim.simScaleObject(
+            self._handle, xscale, ysacle, zscale)
+
     def is_respondable(self) -> bool:
         """Whether the shape is respondable or not.
 

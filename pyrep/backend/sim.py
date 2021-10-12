@@ -378,6 +378,11 @@ def simSetObjectName(objectHandle, name):
     _check_return(ret)
 
 
+def simScaleObject(objectHandle, xscale, yscale, zscale):
+    ret = lib.simScaleObject(objectHandle, xscale, yscale, zscale, 0)
+    _check_return(ret)
+
+
 def simAddStatusbarMessage(message):
     return lib.simAddStatusbarMessage(message.encode('ascii'))
 
